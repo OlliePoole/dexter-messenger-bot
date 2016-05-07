@@ -38,68 +38,62 @@ controller.hears(['hello', 'hi'], 'message_received', function(bot, message) {
   });
 });
 
-var chilledImage = "http://i.imgur.com/dMEgFKp.png"
-var upbeatImage = "http://i.imgur.com/RgUmcTP.png"
-var rockImage = "http://i.imgur.com/to6MQC8.png"
-
-var playlistGenreAttachment = {
-    'type':'template',
-    'payload':{
-        'template_type':'generic',
-        'elements':[
-            {
-                'title':'Chilled',
-                'image_url':chilledImage,
-                'buttons':[
-                    {
-                    'type':'postback',
-                    'title':'Select',
-                    'payload':'chilled'
-                    }
-                ]
-            },
-            {
-                'title':'Upbeat',
-                'image_url':upbeatImage,
-                'buttons':[
-                    {
-                    'type':'postback',
-                    'payload':'upbeat'
-                    }
-                ]
-            },
-            {
-                'title':'Rock',
-                'image_url':rockImage,
-                'buttons':[
-                    {
-                    'type':'postback',
-                    'title':'Select',
-                    'payload':'rock'
-                    }
-                ]
-            },
-        ]
-    }
-};
 
 /// Create playlists
 controller.hears(['I have an exam next week, can you create a (.*) playlist'],  'message_received', function(bot, message) {
   var playlistName = message.match[1];
 
-  bot.startConversation(message, function(err, convo) {
-    convo.say('I sure can!');
-    convo.say('What sort of music would you like to include?');
-
-    convo.say(message, {
-        attachment: playlistGenreAttachment,
-    });
-    convo.next();
+  var playlistGenreAttachment = {
+      'type':'template',
+      'payload':{
+          'template_type':'generic',
+          'elements':[
+              {
+                  'title':'Chilled',
+                  'image_url':"http://i.imgur.com/dMEgFKp.png",
+                  'buttons':[
+                      {
+                      'type':'postback',
+                      'title':'Select',
+                      'payload':'chilled'
+                      }
+                  ]
+              },
+              {
+                  'title':'Upbeat',
+                  'image_url':"http://i.imgur.com/RgUmcTP.png",
+                  'buttons':[
+                      {
+                      'type':'postback',
+                      'title':'Select',
+                      'payload':'upbeat'
+                      }
+                  ]
+              },
+              {
+                  'title':'Rock',
+                  'image_url':"http://i.imgur.com/to6MQC8.png",
+                  'buttons':[
+                      {
+                      'type':'postback',
+                      'title':'Select',
+                      'payload':'rock'
+                      }
+                  ]
+              },
+          ]
+      }
+  };
+  bot.reply(message, "What sort of playlist would you like?");
+  bot.reply(message, {
+      attachment: playlistGenreAttachment,
   });
 });
 
 controller.on('facebook_postback', function(bot, message) {
 
-  bot.reply(message, message.payload);
+  var selectedGenre = message.payload;
+
+  // Create spotify playlist
 
 });
