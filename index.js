@@ -1,120 +1,105 @@
-var express = require('express')
-var bodyParser = require('body-parser')
-var request = require('request')
-var Botkit = require('botkit');
-var app = express()
 
 var token = "EAAHELddxja0BAInNz3Kl9X2xTldrxNqKVvsZAiKss1ZB0rch96xPx6r9kJLoMqPUsQyNl1SrZBZCS4aXSi3V8SuZBVq3eGZAqfngLLaxMpWnahyDI2pfTWTbIs7M75fH0sIrK8lZChwMnvtR3CAfpGYczGAKENjuYG7YEKJ06Qx6AZDZD";
+var access = "this_is_my_token"
 
-app.set('port', (process.env.PORT || 3000))
+var Botkit = require('botkit');
+var os = require('os');
 
-// Process application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: false}))
+var controller = Botkit.facebookbot({
+    debug: true,
+    access_token: token,
+    verify_token: access,
+});
 
-// Process application/json
-app.use(bodyParser.json())
+var bot = controller.spawn({
+});
 
-// Index route
-app.get('/', function (req, res) {
-    res.send('Hello world, I am a chat bot')
-})
 
-// for Facebook verification
-app.get('/webhook/', function (req, res) {
-    if (req.query['hub.verify_token'] === 'this_is_my_token') {
-        res.send(req.query['hub.challenge'])
+controller.setupWebserver(process.env.port || 3000, function(err, webserver) {
+    controller.createWebhookEndpoints(webserver, bot, function() {
+        console.log('ONLINE!');
+    });
+});
+
+
+controller.hears(['hello', 'hi'], 'message_received', function(bot, message) {
+
+  bot.startConversation(message,function(err,convo) {
+
+    convo.say('Woof Woof');
+    convo.say('Oh hey there human, my name is Dexter');
+    convo.say('I have four legs, lots of fur and can help you discover new and great music');
+
+    convo.ask("I don't think we've met before, and I can't smell you from here. So can you tell me your name?", function(response,convo) {
+
+      convo.say('Nice to meet you ' + response.text);
+      convo.next();
+    });
+  });
+});
+
+var chilledImage = "http://i.imgur.com/dMEgFKp.png"
+var upbeatImage = "http://i.imgur.com/RgUmcTP.png"
+var rockImage = "http://i.imgur.com/to6MQC8.png"
+
+var playlistGenreAttachment = {
+    'type':'template',
+    'payload':{
+        'template_type':'generic',
+        'elements':[
+            {
+                'title':'Chilled',
+                'image_url':chilledImage,
+                'buttons':[
+                    {
+                    'type':'postback',
+                    'title':'Select',
+                    'payload':'chilled'
+                    }
+                ]
+            },
+            {
+                'title':'Upbeat',
+                'image_url':upbeatImage,
+                'buttons':[
+                    {
+                    'type':'postback',
+                    'payload':'upbeat'
+                    }
+                ]
+            },
+            {
+                'title':'Rock',
+                'image_url':rockImage,
+                'buttons':[
+                    {
+                    'type':'postback',
+                    'title':'Select',
+                    'payload':'rock'
+                    }
+                ]
+            },
+        ]
     }
-    res.send('Error, wrong token')
-})
+};
 
-// // for Facebook verification
-app.post('/webhook/', function (req, res) {
-    messaging_events = req.body.entry[0].messaging
-    for (i = 0; i < messaging_events.length; i++) {
-        event = req.body.entry[0].messaging[i]
-        sender = event.sender.id
-        if (event.message && event.message.text) {
-            text = event.message.text
+/// Create playlists
+controller.hears(['I have an exam next week, can you create a (.*) playlist'],  'message_received', function(bot, message) {
+  var playlistName = message.match[1];
 
-            handleIncomingMessage(sender, text);
-        }
-    }
-    res.sendStatus(200)
-})
+  bot.startConversation(message, function(err, convo) {
+    convo.say('I sure can!');
+    convo.say('What sort of music would you like to include?');
 
-// Spin up the server
-app.listen(app.get('port'), function() {
-    console.log('running on port', app.get('port'))
-})
+    convo.say(message, {
+        attachment: playlistGenreAttachment,
+    });
+    convo.next();
+  });
+});
 
-var greetings = ['hello', 'hi']
+controller.on('facebook_postback', function(bot, message) {
 
-var humanSpeak = ['human', 'language', 'speak', 'english']
+  bot.reply(message, message.payload);
 
-var isFirstLaunch = true
-
-function handleIncomingMessage(sender, message) {
-
-  if (isFirstLaunch) {
-    sendTextMessage(sender, "Woof Woof", function() {
-      sendTextMessage(sender, "Oh hey there human, my name is Dexter", function() {
-        sendTextMessage(sender, "I have four legs, ")
-      })
-    })
-  }
-
-  var splitMessage = message.split(" ")
-
-  if (greetings.indexOf(message.toLowerCase()) != -1) {
-
-    return
-  }
-
-  var humanSpeakMessageScore = 0
-
-  splitMessage.forEach(function(word) {
-    word = word.toLowerCase()
-
-    if (humanSpeak.indexOf(word) != -1) {
-      humanSpeakMessageScore += 1
-    }
-  })
-
-  if (humanSpeakMessageScore > 0) {
-    sendTextMessage(sender, "Wo... Sorry about that human", function() {
-      sendTextMessage(sender, "How can I help you today?")
-    })
-
-
-
-    return
-  }
-
-
-
-  // send generic response
-  sendTextMessage(sender, "Didn't catch that sorry! Was too busy playing fetch")
-}
-
-function sendTextMessage(sender, text, completion) {
-    messageData = {
-        text:text
-    }
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token:token},
-        method: 'POST',
-        json: {
-            recipient: {id:sender},
-            message: messageData,
-        }
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error sending messages: ', error)
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error)
-        } else if (completion !== undefined) {
-          completion()
-        }
-    })
-}
+});
