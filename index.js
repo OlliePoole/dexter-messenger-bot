@@ -4,6 +4,7 @@ var access = "this_is_my_token"
 
 var Botkit = require('botkit');
 var os = require('os');
+var spotify = require('./spotify');
 
 var controller = Botkit.facebookbot({
     debug: true,
@@ -38,10 +39,10 @@ controller.hears(['hello', 'hi'], 'message_received', function(bot, message) {
   });
 });
 
-
+var playlistName = ""
 /// Create playlists
 controller.hears(['I have an exam next week, can you create a (.*) playlist'],  'message_received', function(bot, message) {
-  var playlistName = message.match[1];
+  playlistName = message.match[1];
 
   var playlistGenreAttachment = {
       'type':'template',
@@ -66,7 +67,7 @@ controller.hears(['I have an exam next week, can you create a (.*) playlist'],  
                       {
                       'type':'postback',
                       'title':'Select',
-                      'payload':'upbeat'
+                      'payload': 'upbeat'
                       }
                   ]
               },
@@ -77,7 +78,7 @@ controller.hears(['I have an exam next week, can you create a (.*) playlist'],  
                       {
                       'type':'postback',
                       'title':'Select',
-                      'payload':'rock'
+                      'payload': 'rock'
                       }
                   ]
               },
@@ -92,8 +93,18 @@ controller.hears(['I have an exam next week, can you create a (.*) playlist'],  
 
 controller.on('facebook_postback', function(bot, message) {
 
-  var selectedGenre = message.payload;
+  var payload = message.payload;
+  var selectedGenres = []
+
+  if (payload == 'chilled') {
+    selectedGenres = ['chill', 'study', 'sleep', 'lounge']
+  } else if (payload == 'upbeat') {
+    selectedGenres = ['club', 'dance', 'disco', 'edm', 'pop']
+  }
 
   // Create spotify playlist
+  spotify.createPlaylist("Revision Playlist", selectedGenres, function() {
+    bot.reply(message, "That playlist has been built - enjoy");
+  });
 
 });
