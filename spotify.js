@@ -10,7 +10,7 @@ function createPlaylist(name, genres, completion) {
 
       console.log("Filling playlist");
       fillPlaylist(playListID, tracks, function() {
-        completion();
+        completion(playlistURL);
       });
     });
 
@@ -42,6 +42,7 @@ function createEmptyPlaylist(playlistName, completion) {
         if (response.statusCode == 200 || response.statusCode == 201) {
           console.log("Playlist created");
           var playlistID = body.id
+          playlistURL = body.external_urls.spotify;
 
           completion(playlistID);
         }

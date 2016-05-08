@@ -43,7 +43,10 @@ controller.hears(['hello', 'hi'], 'message_received', function(bot, message) {
 
 var playlistName = ""
 /// Create playlists
-controller.hears(['I have an exam next week, can you create a (.*) playlist'],  'message_received', function(bot, message) {
+controller.hears(['I have an exam next week, can you create a (.*) playlist',
+                  'I having a party next week, can you create a (.*) playlist',
+                    'I having some friends over, can you create a (.*) playlist'],  'message_received', function(bot, message) {
+
   playlistName = message.match[1];
 
   var playlistGenreAttachment = {
@@ -133,6 +136,7 @@ controller.on('facebook_postback', function(bot, message) {
   // Create spotify playlist
   spotify.createPlaylist(playlistName, selectedGenres, function(playlistLink) {
     bot.reply(message, "Woof Woof! That's dog for 'your playlist has been built!'");
+    bot.reply(message, "Your playlist is here: " + playlistLink);
   });
 
 });
