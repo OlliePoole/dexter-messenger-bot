@@ -17,10 +17,8 @@ function createPlaylist(name, genres, completion) {
   });
 }
 
-<<<<<<< HEAD
 var playlistURL = ""
-=======
->>>>>>> 9e2f7ae6a4f958c6a40090c9e53c2a7b9917b219
+
 // Creates the empty playlist
 function createEmptyPlaylist(playlistName, completion) {
 
@@ -44,10 +42,7 @@ function createEmptyPlaylist(playlistName, completion) {
         if (response.statusCode == 200 || response.statusCode == 201) {
           console.log("Playlist created");
           var playlistID = body.id
-<<<<<<< HEAD
-        
-=======
->>>>>>> 9e2f7ae6a4f958c6a40090c9e53c2a7b9917b219
+
           completion(playlistID);
         }
         else {
