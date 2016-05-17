@@ -1,5 +1,5 @@
 var request = require('request')
-var config = require('./config')
+var config = require('../config')
 
 function createPlaylist(name, genres, completion) {
   console.log("Creating Playlist");

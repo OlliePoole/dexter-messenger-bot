@@ -1,4 +1,4 @@
-var config = require('./config')
+var config = require('../config')
 var sentimentAnalysis = require('sentiment-analysis');
 
 function sentimentForMessage(message) {

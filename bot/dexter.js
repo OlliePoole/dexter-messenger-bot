@@ -1,4 +1,3 @@
-
 var token = "EAAHELddxja0BAInNz3Kl9X2xTldrxNqKVvsZAiKss1ZB0rch96xPx6r9kJLoMqPUsQyNl1SrZBZCS4aXSi3V8SuZBVq3eGZAqfngLLaxMpWnahyDI2pfTWTbIs7M75fH0sIrK8lZChwMnvtR3CAfpGYczGAKENjuYG7YEKJ06Qx6AZDZD";
 var access = "this_is_my_token"
 
@@ -18,7 +17,7 @@ var bot = controller.spawn({
 });
 
 
-controller.setupWebserver(process.env.port || 3000, function(err, webserver) {
+controller.setupWebserver(process.env.port || 4000, function(err, webserver) {
     controller.createWebhookEndpoints(webserver, bot, function() {
         console.log('ONLINE!');
     });
@@ -37,17 +36,26 @@ controller.hears(['hello', 'hi'], 'message_received', function(bot, message) {
 
       convo.say('Nice to meet you ' + response.text);
       convo.next();
+
+      convo.say('I need you to login to Spotify, so I can see what music you like to listen to');
+      convo.ask("I'm going to open the login in a new tab, is that alright?", function(response, convo) {
+        var answer = response.text;
+        
+      });
+
     });
+
+
   });
 });
 
-var playlistName = ""
+var enteredPlaylistName = ""
 /// Create playlists
 controller.hears(['I have an exam next week, can you create a (.*) playlist',
-                  'I having a party next week, can you create a (.*) playlist',
-                    'I having some friends over, can you create a (.*) playlist'],  'message_received', function(bot, message) {
+                  "I'm having a party next week, can you create a (.*) playlist",
+                    "I'm having some friends over, can you create a (.*) playlist"],  'message_received', function(bot, message) {
 
-  playlistName = message.match[1];
+  enteredPlaylistName = message.match[1];
 
   var playlistGenreAttachment = {
       'type':'template',
@@ -110,7 +118,6 @@ controller.hears('(.*)', 'message_received', function(bot, message) {
       bot.reply(message, "Woof! Want to play fetch?")
     }
   }
-
 });
 
 
@@ -122,15 +129,15 @@ controller.on('facebook_postback', function(bot, message) {
 
   if (payload == 'chilled') {
     selectedGenres = ['chill', 'study', 'sleep', 'lounge']
-    playlistName = "Revision Playlist - Chilled"
+    playlistName = "" + enteredPlaylistName + " playlist - chilled"
 
   } else if (payload == 'upbeat') {
     selectedGenres = ['club', 'dance', 'disco', 'edm', 'pop']
-    playlistName = "Revision Playlist - Upbeat"
+    playlistName = "" + enteredPlaylistName + " playlist - upbeat"
 
   } else if (payload == 'rock') {
     selectedGenres = ['rock', 'hard-rock']
-    playlistName = "Revision Playlist - Rock"
+    playlistName = "" + enteredPlaylistName + " playlist - rock"
   }
 
   // Create spotify playlist
