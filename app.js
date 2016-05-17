@@ -1,3 +1,4 @@
+// NPM MODULES
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -5,8 +6,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+// INTERNAL MODULES
 var routes = require('./routes');
-var spotify_auth = require('./bot/spotify_auth');
+var spotify_auth = require('./bot/auth/spotify-auth');
 var config = require('./config');
 
 require('./bot/dexter');

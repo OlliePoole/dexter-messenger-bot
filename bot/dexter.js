@@ -1,21 +1,19 @@
-var token = "EAAHELddxja0BAInNz3Kl9X2xTldrxNqKVvsZAiKss1ZB0rch96xPx6r9kJLoMqPUsQyNl1SrZBZCS4aXSi3V8SuZBVq3eGZAqfngLLaxMpWnahyDI2pfTWTbIs7M75fH0sIrK8lZChwMnvtR3CAfpGYczGAKENjuYG7YEKJ06Qx6AZDZD";
-var access = "this_is_my_token"
 
+// MODULES
 var Botkit = require('botkit');
 var os = require('os');
 var spotify = require('./spotify');
 var sentiment_analysis = require('./sentiment_analysis')
+var config = require('../config');
 
-
+// SETUP
 var controller = Botkit.facebookbot({
     debug: true,
-    access_token: token,
-    verify_token: access,
+    access_token: config.facebook_page_token,
+    verify_token: config.facebook_token,
 });
 
-var bot = controller.spawn({
-});
-
+var bot = controller.spawn({});
 
 controller.setupWebserver(process.env.port || 4000, function(err, webserver) {
     controller.createWebhookEndpoints(webserver, bot, function() {
@@ -23,6 +21,9 @@ controller.setupWebserver(process.env.port || 4000, function(err, webserver) {
     });
 });
 
+exports.controller = controller
+
+// EVENTS
 
 controller.hears(['hello', 'hi'], 'message_received', function(bot, message) {
 
@@ -40,7 +41,7 @@ controller.hears(['hello', 'hi'], 'message_received', function(bot, message) {
       convo.say('I need you to login to Spotify, so I can see what music you like to listen to');
       convo.ask("I'm going to open the login in a new tab, is that alright?", function(response, convo) {
         var answer = response.text;
-        
+
       });
 
     });

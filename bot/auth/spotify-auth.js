@@ -1,4 +1,5 @@
-var request = require('request'); // "Request" library
+// MODULES
+var request = require('request');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var config = require('../../config');
