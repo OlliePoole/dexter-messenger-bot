@@ -33,3 +33,8 @@ node_modules
 .node_repl_history
 
 config.js
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
