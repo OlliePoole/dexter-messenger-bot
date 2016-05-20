@@ -6,8 +6,6 @@ npm-debug.log
 .gitignore
 .ebextensions/*
 
-config.js
-
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
