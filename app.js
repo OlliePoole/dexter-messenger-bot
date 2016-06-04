@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 // INTERNAL MODULES
-var routes = require('./routes');
+var routes = require('./routes/index');
 var spotify_auth = require('./bot/auth/spotify-auth');
 var config = require('./config');
 
@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes.login);
+app.use('/', routes);
 
 app.get('/spotify/login', function(res, req) {
   spotify_auth.loginAuth(res);

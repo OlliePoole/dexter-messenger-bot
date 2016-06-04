@@ -1,5 +1,5 @@
-exports.spotify_token = ""
-exports.epotify_username = ""
+exports.spotify_token = "";
+exports.epotify_username = "";
 
-exports.facebook_page_token = ""
-exports.facebook_token = ""
+exports.facebook_page_token = "EAAHELddxja0BADZCZAfZABJeMxi2h38b7l3jnuazyIIhpZBkVf1pv0xGsqynNNRvvvI3ZCuUHkFM6FLWLN19Ry0mkXagZAJRZAABR5fZBAq3sVRHYdCVOMh7LfkHUCIUeXDxnuWHbKsqynErYO2j3kyyH1L1Te3I88g7ZC0YgeGUDIwZDZD";
+exports.facebook_token = "H6w1hNrbQHPU8A7m1b8fl4vNA8LLzBQQ";
