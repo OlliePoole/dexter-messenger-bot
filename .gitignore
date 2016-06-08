@@ -4,6 +4,7 @@ node_modules
 npm-debug.log
 
 .gitignore
+config.js
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
