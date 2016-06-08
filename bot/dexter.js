@@ -40,7 +40,7 @@ request.post('https://graph.facebook.com/me/subscribed_apps?access_token=' + fac
   });
 
 
-// EVENTS
+// EVENTS - User says hello
 controller.hears(['hello', 'hi', 'hello (.*)', 'hi (.*)'], 'message_received', function (bot, message) {
 
   bot.startConversation(message, function (err, convo) {
@@ -61,6 +61,8 @@ controller.hears(['hello', 'hi', 'hello (.*)', 'hi (.*)'], 'message_received', f
   });
 });
 
+
+// EVENTS - User agrees to login with spotify
 controller.hears(['woof'], 'message_received', function (bot, message) {
 
   mostRecentMessageReceived = message;
@@ -74,63 +76,58 @@ controller.hears(['woof'], 'message_received', function (bot, message) {
 });
 
 
+// EVENTS - User has completed the spotify login process
+var login_handler = function () {
 
-var enteredPlaylistName = "";
+  mostRecentBotUsed.reply(mostRecentMessageReceived,
+    "Great work! Try asking me to 'Create a revision playlist', or 'Create a party playlist'");
+};
 
-/// Create playlist
-controller.hears(['I have an exam next week, can you create a (.*) playlist',
-  "I'm having a party next week, can you create a (.*) playlist",
-  "I'm having some friends over, can you create a (.*) playlist"], 'message_received', function (bot, message) {
 
-  enteredPlaylistName = message.match[1];
+// EVENTS - User requests to create playlist
+var entered_playlist_name = "";
 
-  var playlistGenreAttachment = {
+controller.hears(['create a (.*) playlist', 'create a (.*) playlist (.*)'], 'message_received',
+  function (bot, message) {
+    entered_playlist_name = message.match[1];
 
-    'type': 'template',
-    'payload': {
-      'template_type': 'generic',
-      'elements': [
-        {
-          'title': 'Chilled',
-          'image_url': "http://i.imgur.com/dMEgFKp.png",
-          'buttons': [
-            {
-              'type': 'postback',
-              'title': 'Select',
-              'payload': 'chilled'
-            }
-          ]
-        },
-        {
-          'title': 'Upbeat',
-          'image_url': "http://i.imgur.com/RgUmcTP.png",
-          'buttons': [
-            {
-              'type': 'postback',
-              'title': 'Select',
-              'payload': 'upbeat'
-            }
-          ]
-        },
-        {
-          'title': 'Rock',
-          'image_url': "http://i.imgur.com/to6MQC8.png",
-          'buttons': [
-            {
-              'type': 'postback',
-              'title': 'Select',
-              'payload': 'rock'
-            }
-          ]
-        }
-      ]
-    }
-  };
-  bot.reply(message, "What sort of music would you like in the playlist?");
-  bot.reply(message, {
-    attachment: playlistGenreAttachment
-  });
+    var playlistAttachment = attachmentBuilder.createGenreSelectionAttachment();
+
+    bot.reply(message, "What sort of music would you like in the playlist?");
+    bot.reply(message, {
+      attachment: playlistAttachment
+    });
+  }
+);
+
+// EVENTS - User responds to the genre selector
+controller.on('facebook_postback', function (bot, message) {
+
+  var payload = message.payload;
+  var selectedGenres = [];
+
+  if (payload == 'chilled') {
+    selectedGenres = ['chill', 'study', 'sleep', 'lounge'];
+
+  } else if (payload == 'upbeat') {
+    selectedGenres = ['club', 'dance', 'disco', 'edm', 'pop'];
+
+  } else if (payload == 'rock') {
+    selectedGenres = ['rock', 'hard-rock'];
+  }
+
+  var playlistName = "Dexter's " + entered_playlist_name + " playlist";
+  console.log("PLAYLIST NAME: " + playlistName);
+
+  // // Create spotify playlist
+  // spotify.createPlaylist(playlistName, selectedGenres, function (playlistLink) {
+  //   bot.reply(message, "Woof Woof! That's dog for 'your playlist has been built!'");
+  //   bot.reply(message, "Your playlist is here: " + playlistLink);
+  // });
+
 });
+
+
 
 controller.hears('(.*)', 'message_received', function (bot, message) {
   console.log("General message received");
@@ -149,49 +146,10 @@ controller.hears('(.*)', 'message_received', function (bot, message) {
 });
 
 
-controller.on('facebook_postback', function (bot, message) {
-
-  var payload = message.payload;
-  var selectedGenres = [];
-  var playlistName = "";
-
-  if (payload == 'chilled') {
-    selectedGenres = ['chill', 'study', 'sleep', 'lounge'];
-    playlistName = "" + enteredPlaylistName + " playlist - chilled"
-
-  } else if (payload == 'upbeat') {
-    selectedGenres = ['club', 'dance', 'disco', 'edm', 'pop'];
-    playlistName = "" + enteredPlaylistName + " playlist - upbeat"
-
-  } else if (payload == 'rock') {
-    selectedGenres = ['rock', 'hard-rock'];
-    playlistName = "" + enteredPlaylistName + " playlist - rock"
-  }
-
-  // Create spotify playlist
-  spotify.createPlaylist(playlistName, selectedGenres, function (playlistLink) {
-    bot.reply(message, "Woof Woof! That's dog for 'your playlist has been built!'");
-    bot.reply(message, "Your playlist is here: " + playlistLink);
-  });
-
-});
 
 
-// LOGIN HANDLER
-var login_handler = function () {
 
-  mostRecentBotUsed.startConversation(mostRecentMessageReceived, function (err, convo) {
 
-    convo.ask("Great work! Shall we create a playlist now?",
-      function (response, convo) {
-        convo.next();
-
-        convo.say(response.text);
-
-      });
-  });
-
-};
 
 // MESSAGE HANDLER
 
