@@ -1,8 +1,10 @@
 // MODULES
 var request = require('request');
 var querystring = require('querystring');
-var cookieParser = require('cookie-parser');
-var config = require('../../config');
+
+var redirect_uri = process.env.spotify_redirect_uri || require('../../config').spotify_redirect_uri;
+var spotify_client_id = process.env.spotify_client_id || require('../../config').spotify_client_id;
+var spotify_client_secret = process.env.spotify_client_secret || require('../../config').spotify_client_secret;
 
 /**
  * Generates a random string containing numbers and letters
@@ -19,88 +21,64 @@ var generateRandomString = function(length) {
   return text;
 };
 
-var stateKey = 'spotify_auth_state';
-
-
 function loginAuth(res) {
+  res.redirect(generateLoginURL());
+}
 
+function generateLoginURL() {
   var state = generateRandomString(16);
 
-  res.cookie(stateKey, state);
-
-  // your application requests authorization
   var scope = 'user-read-private user-read-email';
-  res.redirect('https://accounts.spotify.com/authorize?' +
+
+  return 'https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
-      client_id: config.spotify_client_id,
+      client_id: spotify_client_id,
       scope: scope,
       redirect_uri: redirect_uri,
       state: state
-    }));
+    })
 }
 
-
-function handleCallback(res) {
+function handleCallback(code) {
   // your application requests refresh and access tokens
-  // after checking the state parameter
 
-  var code = req.query.code || null;
-  var state = req.query.state || null;
-  var storedState = req.cookies ? req.cookies[stateKey] : null;
+  var authOptions = {
+    url: 'https://accounts.spotify.com/api/token',
+    form: {
+      code: code,
+      redirect_uri: redirect_uri,
+      grant_type: 'authorization_code'
+    },
+    headers: {
+      'Authorization': 'Basic ' + (new Buffer(spotify_client_id + ':' + spotify_client_secret).toString('base64'))
+    },
+    json: true
+  };
 
-  if (state === null || state !== storedState) {
-    res.redirect('/#' +
-      querystring.stringify({
-        error: 'state_mismatch'
-      }));
-  } else {
-    res.clearCookie(stateKey);
-    var authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      form: {
-        code: code,
-        redirect_uri: redirect_uri,
-        grant_type: 'authorization_code'
-      },
-      headers: {
-        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
-      },
-      json: true
-    };
+  request.post(authOptions, function(error, response, body) {
+    if (!error && response.statusCode === 200) {
 
-    request.post(authOptions, function(error, response, body) {
-      if (!error && response.statusCode === 200) {
+      var access_token = body.access_token,
+          refresh_token = body.refresh_token;
 
-        var access_token = body.access_token,
-            refresh_token = body.refresh_token;
+      var options = {
+        url: 'https://api.spotify.com/v1/me',
+        headers: { 'Authorization': 'Bearer ' + access_token },
+        json: true
+      };
 
-        var options = {
-          url: 'https://api.spotify.com/v1/me',
-          headers: { 'Authorization': 'Bearer ' + access_token },
-          json: true
-        };
+      // use the access token to access the Spotify Web API
+      request.get(options, function(error, response, body) {
+        console.log(body);
+      });
 
-        // use the access token to access the Spotify Web API
-        request.get(options, function(error, response, body) {
-          console.log(body);
-        });
-
-        // we can also pass the token to the browser to make requests from there
-        res.redirect('/#' +
-          querystring.stringify({
-            access_token: access_token,
-            refresh_token: refresh_token
-          }));
-      } else {
-        res.redirect('/#' +
-          querystring.stringify({
-            error: 'invalid_token'
-          }));
-      }
-    });
-  }
+    } else {
+      console.log("Something went wrong here");
+    }
+  });
 }
 
 exports.loginAuth = loginAuth;
+exports.generateLoginURL = generateLoginURL;
 exports.handleCallback = handleCallback;

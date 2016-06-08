@@ -8,8 +8,6 @@ var bodyParser = require('body-parser');
 
 // INTERNAL MODULES
 var routes = require('./routes/index');
-var spotify_auth = require('./bot/auth/spotify-auth');
-var config = require('./config');
 
 var app = express();
 

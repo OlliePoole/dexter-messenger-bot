@@ -1,5 +1,7 @@
-var request = require('request')
-var config = require('../config')
+var request = require('request');
+var storage_manager = require('./storage/storage_manager');
+
+var spotify_token = storage_manager.loadToken(""); // TODO: enter facebook user id here
 
 function createPlaylist(name, genres, completion) {
   console.log("Creating Playlist");
@@ -17,7 +19,7 @@ function createPlaylist(name, genres, completion) {
   });
 }
 
-var playlistURL = ""
+var playlistURL = "";
 
 // Creates the empty playlist
 function createEmptyPlaylist(playlistName, completion) {
@@ -32,7 +34,7 @@ function createEmptyPlaylist(playlistName, completion) {
       }, //Query string data
       headers: { //We can define headers too
           'Content-Type': 'application/json',
-          'Authorization': config.spotify_token
+          'Authorization': spotify_token
       }
   }, function(error, response, body){
       if(error) {
@@ -64,7 +66,7 @@ function fillPlaylist(playlistToFill, seedTracks, completion) {
         method: 'POST', //Specify the method
         headers: { //We can define headers too
             'Content-Type': 'application/json',
-            'Authorization': config.spotify_token
+            'Authorization': spotify_token
         }
 
     }, function(error, response, body){
@@ -94,7 +96,7 @@ function fetchTracksForPlaylist(seedTracks, completion) {
       url: 'https://api.spotify.com/v1/recommendations?seed_artists=' + seedTracks.join(), //URL to hit
       method: 'GET', //Specify the method
       headers: { //We can define headers too
-          'Authorization': config.spotify_token
+          'Authorization': spotify_token
       }
   }, function(error, response, body){
       if(error) {
@@ -126,7 +128,7 @@ function fetchSeedTracks(searchGenres, completion) {
       method: 'GET', //Specify the method
       headers: { //We can define headers too
           'Accept': 'application/json',
-          'Authorization': config.spotify_token
+          'Authorization': spotify_token
       }
   }, function(error, response, body){
       if(error) {

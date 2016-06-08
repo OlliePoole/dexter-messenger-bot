@@ -1,5 +1,7 @@
-var facebook_handler = require('../bot/dexter').handler;
-var config = require('../config');
+var facebook_handler         = require('../bot/dexter').handler;
+var login_handler            = require('../bot/dexter').handleSuccessfulLogin;
+var spotify_callback_handler = require('../bot/auth/spotify-auth').handleCallback;
+
 
 module.exports = function (app) {
 
@@ -15,7 +17,7 @@ module.exports = function (app) {
     var mode = req.query['hub.mode'];
     var token = req.query['hub.verify_token'];
 
-    if (mode === 'subscribe' && token === config.facebook_token) {
+    if (mode === 'subscribe' && token === process.env.facebook_token || require('../config').facebook_token) {
       var challenge = req.query['hub.challenge'];
       res.send(challenge);
     }
@@ -30,11 +32,19 @@ module.exports = function (app) {
     res.send('ok')
   });
 
-  app.get('/spotify/login', function (res, req) {
-    spotify_auth.loginAuth(res);
-  });
-
   app.get('/spotify/callback', function (req, res) {
+    var code = req.query.code;
+    // var state = req.query.state;
+    //
+    // // TODO: Do something useful with the creds.
+    // console.log("Received spotify callback");
+    // console.log("Code: " + code);
+    // console.log("State: " + state);
 
+    // TODO: Check if user has already logged in.
+    spotify_callback_handler(code);
+    login_handler();
+
+    res.render('login_successful');
   });
 };

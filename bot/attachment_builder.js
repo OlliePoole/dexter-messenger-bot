@@ -1,5 +1,5 @@
 
-function createSingleItemAttachment(title, image_url, buttonTitle, buttonPayload) {
+function createSingleItemAttachment(title, image_url, buttonTitle, web_url) {
   return {
     'type': 'template',
     'payload': {
@@ -10,9 +10,9 @@ function createSingleItemAttachment(title, image_url, buttonTitle, buttonPayload
           'image_url': image_url,
           'buttons': [
             {
-              'type': 'postback',
-              'title': buttonTitle,
-              'payload': buttonPayload
+              'type': 'web_url',
+              'url': web_url,
+              'title': buttonTitle
             }
           ]
         }

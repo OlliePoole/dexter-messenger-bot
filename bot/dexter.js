@@ -2,23 +2,30 @@
 var Botkit             = require('botkit');
 var os                 = require('os');
 var spotify            = require('./spotify');
+var spotify_auth       = require('./auth/spotify-auth');
 var sentiment_analysis = require('./sentiment_analysis');
-var config             = require('../config');
 var request            = require('request');
 var attachmentBuilder  = require('./attachment_builder');
+
+// To allow different functions to reply to messages
+var mostRecentMessageReceived;
+var mostRecentBotUsed;
+
+var facebook_page_token = process.env.facebook_page_token || require('../config').facebook_page_token;
+var facebook_token = process.env.facebook_token || require('../config').facebook_token;
 
 // SETUP
 var controller = Botkit.facebookbot({
   debug: true,
-  access_token: config.facebook_page_token,
-  verify_token: config.facebook_token
+  access_token: facebook_page_token,
+  verify_token: facebook_token
 });
 
 var bot = controller.spawn({});
 
 
 //subscribe to page events
-request.post('https://graph.facebook.com/me/subscribed_apps?access_token=' + config.facebook_page_token,
+request.post('https://graph.facebook.com/me/subscribed_apps?access_token=' + facebook_page_token,
   function (err, res, body) {
     if (err) {
       controller.log('Could not subscribe to page messages');
@@ -56,8 +63,13 @@ controller.hears(['hello', 'hi', 'hello (.*)', 'hi (.*)'], 'message_received', f
 
 controller.hears(['woof'], 'message_received', function (bot, message) {
 
+  mostRecentMessageReceived = message;
+  mostRecentBotUsed = bot;
+
+  var auth_url = spotify_auth.generateLoginURL();
+  
   bot.reply(message, {
-    attachment: attachmentBuilder.createSingleItemAttachment("Login with Spotify", "", "Let's go", "spotify_login")
+    attachment: attachmentBuilder.createSingleItemAttachment("Login with Spotify", "", "Let's go", auth_url)
   });
 });
 
@@ -165,6 +177,22 @@ controller.on('facebook_postback', function (bot, message) {
 });
 
 
+// LOGIN HANDLER
+var login_handler = function () {
+
+  mostRecentBotUsed.startConversation(mostRecentMessageReceived, function (err, convo) {
+
+    convo.ask("Great work! Shall we create a playlist now?",
+      function (response, convo) {
+        convo.next();
+
+        convo.say(response.text);
+
+      });
+  });
+
+};
+
 // MESSAGE HANDLER
 
 //this function processes the POST request to the webhook
@@ -256,4 +284,4 @@ var handler = function (obj) {
 };
 
 exports.handler = handler;
-
+exports.handleSuccessfulLogin = login_handler;
