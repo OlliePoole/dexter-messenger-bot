@@ -1,13 +1,17 @@
 extends layout
 
 block content
-  .center-align
-    h1 Meet Dexter
-  
-    img(src='/images/dexter.png')
-    
-    #widget(style=' display: inline-block; overflow: hidden; height: auto; min-width: 100px; text-align: center; line-height: normal; white-space: nowrap; vertical-align: middle;')
-      div(style='color: black; padding: 6px; -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; border: 1px solid #e0e0e0; background-color: white; -webkit-box-shadow: 0px 5px 18px -5px rgba(184,184,184,0.5); -moz-box-shadow: 0px 5px 18px -5px rgba(184,184,184,0.5); box-shadow: 0px 5px 18px -5px rgba(184,184,184,0.5);')             Say hello        
-      div(style="width: 11px; height: 8px; background: url('https://assets.modernapp.co/assets/images/arrow-bottom.png') no-repeat; margin: -1px auto 0 auto;")         
-      a(target='_blank', href='http://m.me/meet.dexter', style="margin-top: 5px; display: inline-block; width: 47px; height: 47px; background: url('https://assets.modernapp.co/assets/images/facebook-message-button-icon-round2x.png') no-repeat; background-size: 47px 47px;")         
-      script(async='', defer='', src='https://assets.modernapp.co/assets/js/embed.js')
+
+  .row
+    .col.s6.m6.l6
+      .row
+        h1.light Meet <strong>Dexter</strong>
+        h5.light Dexter can help you create amazing playlists on Spotify
+      .row
+        a.waves-effect.waves-light.blue.btn
+          | Talk to Dexter on Messenger
+
+    .col.s6.m6.l6
+      img(src='/images/hand_demo.png')
+
+

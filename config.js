@@ -1,5 +1,5 @@
-exports.spotify_token = "";
-exports.epotify_username = "";
+exports.spotify_client_id = "60569eef0ac949288ad11be9c3bf2f95";
+exports.spotify_client_secret = "8acf9da8140e48a9bfa6c482448749ec";
 
-exports.facebook_page_token = "EAAHELddxja0BADZCZAfZABJeMxi2h38b7l3jnuazyIIhpZBkVf1pv0xGsqynNNRvvvI3ZCuUHkFM6FLWLN19Ry0mkXagZAJRZAABR5fZBAq3sVRHYdCVOMh7LfkHUCIUeXDxnuWHbKsqynErYO2j3kyyH1L1Te3I88g7ZC0YgeGUDIwZDZD";
-exports.facebook_token = "H6w1hNrbQHPU8A7m1b8fl4vNA8LLzBQQ";
+exports.facebook_page_token = "EAAHELddxja0BAH3gQS3ODK9pCoxDDT2N74dpa7QjgvmqYCoZBhXEAQtAW3NaHRvzRBL4PGrBtXFs6YrCMNNXV2lYq71cYnfl67kiF3H8s188sNHxZBxH2px7PtYzMBGCAFCOw4CHlmvQmxQRF7KzZBSlJPEsWENDzQt9N8ZCdgZDZD";
+exports.facebook_token = "a_token";

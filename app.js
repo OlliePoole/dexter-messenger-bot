@@ -11,8 +11,6 @@ var routes = require('./routes/index');
 var spotify_auth = require('./bot/auth/spotify-auth');
 var config = require('./config');
 
-require('./bot/dexter');
-
 var app = express();
 
 // view engine setup
@@ -27,15 +25,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-
-app.get('/spotify/login', function(res, req) {
-  spotify_auth.loginAuth(res);
-});
-
-app.get('/spotify/callback', function(req, res) {
-
-});
+//routes
+require('./routes')(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
