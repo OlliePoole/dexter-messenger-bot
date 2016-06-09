@@ -13,3 +13,4 @@ config.js
 .elasticbeanstalk/
 
 .idea/
+AWSEC2InstancePrivateKey.pem.txt

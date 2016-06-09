@@ -1,0 +1,16 @@
+{
+  "users": {
+    "1221": {
+      "spotify_token": "",
+      "user_state": 1
+    },
+    "1234": {
+      "spotify_token": "",
+      "user_state": 1
+    },
+    "<< facebook_id here >>": {
+      "spotify_token": "",
+      "user_state": 0
+    }
+  }
+}

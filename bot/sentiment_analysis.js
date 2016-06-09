@@ -1,9 +1,7 @@
 var sentimentAnalysis = require('sentiment-analysis');
 
 function sentimentForMessage(message) {
-  var sentiment = sentimentAnalysis(message);
-
-  return sentiment;
+  return sentimentAnalysis(message);
 }
 
-exports.sentimentForMessage = sentimentForMessage
+exports.sentimentForMessage = sentimentForMessage;

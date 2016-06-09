@@ -33,7 +33,7 @@ function createGenreSelectionAttachment() {
           'buttons': [
             {
               'type': 'postback',
-              'title': 'Select',
+              'title': 'Chilled Playlist',
               'payload': 'chilled'
             }
           ]
@@ -44,7 +44,7 @@ function createGenreSelectionAttachment() {
           'buttons': [
             {
               'type': 'postback',
-              'title': 'Select',
+              'title': 'Upbeat Playlist',
               'payload': 'upbeat'
             }
           ]
@@ -55,7 +55,7 @@ function createGenreSelectionAttachment() {
           'buttons': [
             {
               'type': 'postback',
-              'title': 'Select',
+              'title': 'Rock Playlist',
               'payload': 'rock'
             }
           ]

@@ -93,6 +93,7 @@ controller.hears(['create a (.*) playlist', 'create a (.*) playlist (.*)'], 'mes
 
     var playlistAttachment = attachmentBuilder.createGenreSelectionAttachment();
 
+    // Show the genre picker
     bot.reply(message, "What sort of music would you like in the playlist?");
     bot.reply(message, {
       attachment: playlistAttachment
@@ -119,15 +120,12 @@ controller.on('facebook_postback', function (bot, message) {
   var playlistName = "Dexter's " + entered_playlist_name + " playlist";
   console.log("PLAYLIST NAME: " + playlistName);
 
-  // // Create spotify playlist
-  // spotify.createPlaylist(playlistName, selectedGenres, function (playlistLink) {
-  //   bot.reply(message, "Woof Woof! That's dog for 'your playlist has been built!'");
-  //   bot.reply(message, "Your playlist is here: " + playlistLink);
-  // });
-
+  // Create spotify playlist
+  spotify.createPlaylist(playlistName, selectedGenres, function (playlistLink) {
+    bot.reply(message, "Woof Woof! That's dog for 'your playlist has been built!'");
+    bot.reply(message, "Your playlist is here: " + playlistLink);
+  });
 });
-
-
 
 controller.hears('(.*)', 'message_received', function (bot, message) {
   console.log("General message received");
@@ -144,9 +142,6 @@ controller.hears('(.*)', 'message_received', function (bot, message) {
     }
   }
 });
-
-
-
 
 
 
