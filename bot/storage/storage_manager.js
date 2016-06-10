@@ -12,8 +12,9 @@ var user_states = {
  * - Assumes that the user is not already added
  *
  * @param object - An object with a value for the key 'facebook_id'
+ * @param callback - a function called when the user has been created successfully
  */
-function createUser(object) {
+function createUser(object, callback) {
   var facebookID = object['facebook_id'];
 
   localStorage.users[facebookID] = {
@@ -23,7 +24,13 @@ function createUser(object) {
 
   console.log("User created with ID: " + facebookID);
 
-  storage_access.saveJSONFile(localStorage);
+  storage_access.saveJSONFile(localStorage, function (successString) {
+    callback(successString);
+  });
+}
+
+function userExists(object) {
+
 }
 
 /**
@@ -54,9 +61,6 @@ function setStateForUser(object) {
 
   storage_access.saveJSONFile(localStorage);
 }
-
-createUser({'facebook_id' : '1221'});
-console.log("USER STATE: " + stateForUser({'facebook_id' : "1221"}));
 
 function saveSpotifyTokenForUser(object) {
   var facebookID = object['facebook_id'];
@@ -90,6 +94,7 @@ function updateUserStateForUser(object) {
 
 // exports.saveToken = saveTokenForUser;
 // exports.loadToken = loadTokenForUser;
-exports.user_states = user_states;
+exports.createUser = createUser;
+//exports.user_states = user_states;
 
 

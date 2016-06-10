@@ -1,7 +1,7 @@
 var request = require('request');
 var storage_manager = require('./storage/storage_manager');
 
-var spotify_token = storage_manager.loadToken(""); // TODO: enter facebook user id here
+var spotify_token = ""; // TODO: enter facebook user id here
 
 function createPlaylist(name, genres, completion) {
   console.log("Creating Playlist");

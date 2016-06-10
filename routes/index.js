@@ -2,9 +2,27 @@ var facebook_handler         = require('../bot/dexter').handler;
 var login_handler            = require('../bot/dexter').handleSuccessfulLogin;
 var spotify_callback_handler = require('../bot/auth/spotify-auth').handleCallback;
 
-
 module.exports = function (app) {
 
+  
+  
+  // TEMP - DO NOT COMMIT
+  var storage = require('../bot/storage/storage_manager');
+  
+  app.post('/createUser', function (req, res) {
+    var user_id = req.query.user_id;
+
+    storage.createUser({'facebook_id' : user_id}, function (message) {
+      res.send(message);
+    });
+  });
+  
+  
+  
+  
+  
+  
+  
   //public pages
   app.get('/', function (req, res) {
     res.render('index', {title: 'Meet Dexter'});
