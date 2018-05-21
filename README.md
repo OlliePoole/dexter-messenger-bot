@@ -1,4 +1,4 @@
-![Header](https://i.imgur.com/qeg70Gz.png))
+![Header](https://i.imgur.com/qeg70Gz.png)
 
 Dexter is a four legged, fury, musical companion who can help you discover new and exciting music. Dexter lives on Facebook Messenger as a bot ( although we don’t tell him that). Dexter creates Spotify playlists for any and every occasion, he looks at the music you listen to most to learn what you love to listen to.
 
