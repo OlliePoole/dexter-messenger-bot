@@ -1,4 +1,5 @@
-# Meet Dexter
+![Header](https://i.imgur.com/qeg70Gz.png))
+
 Dexter is a four legged, fury, musical companion who can help you discover new and exciting music. Dexter lives on Facebook Messenger as a bot ( although we don’t tell him that). Dexter creates Spotify playlists for any and every occasion, he looks at the music you listen to most to learn what you love to listen to.
 
 ### Why Dexter
@@ -14,3 +15,6 @@ Dexter has a sentiment-analysis module built in,  messages sent are analysed as 
 ### The Hack
 
 I created the ‘application’ (don’t tell Dex I said that!) using Node.js and used the node module BotKit to create the Messenger integrations. Dexter communicates with the Spotify Web API to create he empty playlist, find the music you love, generate tracks based on these and finally fill the playlist with the new and existing music.
+
+I won the Spotify sponsor prize for best use of the Spotify API. 
+[![Twitter Image](https://pbs.twimg.com/media/Ch8UIq0WsAA5x2T.jpg)](https://twitter.com/hacksmiths/status/729323804795768832)
